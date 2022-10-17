@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/mnu_zero"
+        android:title="Merchandise"
+        android:icon ="@drawable/ic_card_giftcard_black_24dp"
+        app:showAsAction="ifRoom">
+        <!--android:icon ="@drawable/ic_local_florist_black_24dp"-->
+    </item>
+
+
+    <item
+        android:id="@+id/mnu_one"
+        android:title="Nuclear Wessles"
+
+        app:showAsAction="ifRoom">
+    </item>
+
+
+    <item
+        android:id="@+id/mnu_two"
+        android:title="Phasers on Stun"
+        app:showAsAction="ifRoom">
+    </item>
+
+    <item
+        android:id="@+id/mnu_three"
+        android:title="Live Long and Prosper"
+        app:showAsAction="ifRoom">
+    </item>
+
+    <item
+        android:id="@+id/mnu_four"
+        android:title="Kahn!!!"
+        app:showAsAction="ifRoom">
+    </item>
+
+
+</menu>
