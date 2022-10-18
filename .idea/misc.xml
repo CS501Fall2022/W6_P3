@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/krado/OneDrive/Documents/School/Boston University/Fall 2022/CS 501/W6_P3/app/src/main/res/layout/activity_main.xml" value="0.4" />
+        <entry key="..\:/Users/krado/OneDrive/Documents/School/Boston University/Fall 2022/CS 501/W6_P3/app/src/main/res/layout/listview_row.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_assignment_turned_in_black_24dp.xml" value="0.1875" />
         <entry key="app/src/main/res/drawable/ic_brightness_3_black_24dp.xml" value="0.1875" />
         <entry key="app/src/main/res/drawable/ic_card_giftcard_black_24dp.xml" value="0.1875" />

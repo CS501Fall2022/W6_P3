@@ -2,6 +2,7 @@ package com.example.sse.customlistview_sse;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +31,7 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
 //Step-By-Step, Setting up the ListView
-
+    public static SharedPreferences sharedPrefs;
     private
     ListView lvEpisodes;     //Reference to the listview GUI component
     ListAdapter lvAdapter;   //Reference to the Adapter used to populate the listview.
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        sharedPrefs = this.getSharedPreferences("application", MODE_PRIVATE);
         lvEpisodes = (ListView)findViewById(R.id.lvEpisodes);
         lvAdapter = new MyCustomAdapter(this.getBaseContext());  //instead of passing the boring default string adapter, let's pass our own, see class MyCustomAdapter below!
         lvEpisodes.setAdapter(lvAdapter);
@@ -126,13 +129,14 @@ public class MainActivity extends AppCompatActivity {
 //STEP 1: Create references to needed resources for the ListView Object.  String Arrays, Images, etc.
 
 class MyCustomAdapter extends BaseAdapter {
+    private final String ratings = "RATINGS";
 
     private String episodes[];             //Keeping it simple.  Using Parallel arrays is the introductory way to store the List data.
     String episodeDescriptions[];  //the "better" way is to encapsulate the list items into an object, then create an arraylist of objects.
     String episodelinks[];
 //     int episodeImages[];         //this approach is fine for now.
     ArrayList<Integer> episodeImages;  //Well, we can use one arrayList too...  Just mixing it up here, Arrays or Templated ArrayLists, you choose.
-
+    float episodeRatings[];
 //    ArrayList<String> episodes;
 //    ArrayList<String> episodeDescriptions;
 
@@ -149,6 +153,14 @@ class MyCustomAdapter extends BaseAdapter {
         episodes = aContext.getResources().getStringArray(R.array.episodes);  //retrieving list of episodes predefined in strings-array "episodes" in strings.xml
         episodeDescriptions = aContext.getResources().getStringArray(R.array.episode_descriptions);
         episodelinks =  aContext.getResources().getStringArray(R.array.episode_links);
+        episodeRatings = new float[episodes.length];
+
+        for (int i = 0; i < episodeRatings.length; i++) {
+            if (MainActivity.sharedPrefs.contains(ratings + i)) {
+                Log.w("TAG", "MyCustomAdapter: " + i + " " + MainActivity.sharedPrefs.getFloat(ratings + i, 0));
+                episodeRatings[i] = MainActivity.sharedPrefs.getFloat(ratings + i, 0);
+            }
+        }
 
 //This is how you would do it if you were using an ArrayList, leaving code here for reference, though we could use it instead of the above.
 //        episodes = (ArrayList<String>) Arrays.asList(aContext.getResources().getStringArray(R.array.episodes));  //retrieving list of episodes predefined in strings-array "episodes" in strings.xml
@@ -214,10 +226,12 @@ class MyCustomAdapter extends BaseAdapter {
         ImageView imgEpisode = (ImageView) row.findViewById(R.id.imgEpisode);  //Q: Notice we prefixed findViewByID with row, why?  A: Row, is the container.
         TextView tvEpisodeTitle = (TextView) row.findViewById(R.id.tvEpisodeTitle);
         TextView tvEpisodeDescription = (TextView) row.findViewById(R.id.tvEpisodeDescription);
+        RatingBar tvRatingBar = (RatingBar) row.findViewById(R.id.rbEpisode);
 
         tvEpisodeTitle.setText(episodes[position]);
         tvEpisodeDescription.setText(episodeDescriptions[position]);
         imgEpisode.setImageResource(episodeImages.get(position).intValue());
+        tvRatingBar.setRating(episodeRatings[position]);
 
         btnRandom = (Button) row.findViewById(R.id.btnRandom);
         final String randomMsg = ((Integer)position).toString() +": "+ episodeDescriptions[position];
@@ -226,8 +240,22 @@ class MyCustomAdapter extends BaseAdapter {
             public void onClick(View v) {
 
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(episodelinks[position]));
+                browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(browserIntent);
                 //Toast.makeText(context, randomMsg, Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+        tvRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+                if (b) {
+                    SharedPreferences.Editor editor = MainActivity.sharedPrefs.edit();
+                    episodeRatings[position] = v;
+                    editor.putFloat(ratings + (position), v);
+                    editor.commit();
+                }
             }
         });
 
