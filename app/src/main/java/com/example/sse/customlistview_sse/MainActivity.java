@@ -1,5 +1,6 @@
 package com.example.sse.customlistview_sse;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -76,7 +77,10 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.mnu_two) {
-            //Toast.makeText(getBaseContext(), "Hangup it's a telemarketer.", Toast.LENGTH_LONG).show();
+            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+            sendIntent.setData(Uri.parse("sms:"));
+            sendIntent.putExtra("sms_body", "Ouch!");
+            startActivity(sendIntent);
             return true;
         }
         if (id == R.id.mnu_three) {
@@ -85,11 +89,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (id == R.id.mnu_four) {
-//            String newVideoPath = "raw/khan.mp4";
-//            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(newVideoPath));
+            try {
+                String newVideoPath = "android.resource://" + getPackageName() + "/" + R.raw.khan;
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(newVideoPath));
 //            //intent.setDataAndType(Uri.parse(newVideoPath), "video/mp4");
-//            intent.setDataAndType(Uri.parse(newVideoPath),"video/mp4");
-//            startActivity(intent);
+                intent.setDataAndType(Uri.parse(newVideoPath), "video/mp4");
+                startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getBaseContext(), "App to play video not found", Toast.LENGTH_LONG).show();
+            }
             //Toast.makeText(getBaseContext(), "Hangup it's a telemarketer.", Toast.LENGTH_LONG).show();
             return true;
         }
