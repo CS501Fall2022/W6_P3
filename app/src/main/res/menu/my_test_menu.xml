@@ -14,6 +14,7 @@
     <item
         android:id="@+id/mnu_one"
         android:title="Nuclear Wessles"
+        android:icon ="@drawable/phone"
 
         app:showAsAction="ifRoom">
     </item>

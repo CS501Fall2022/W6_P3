@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,9 +47,7 @@ public class MainActivity extends AppCompatActivity {
         lvEpisodes = (ListView)findViewById(R.id.lvEpisodes);
         lvAdapter = new MyCustomAdapter(this.getBaseContext());  //instead of passing the boring default string adapter, let's pass our own, see class MyCustomAdapter below!
         lvEpisodes.setAdapter(lvAdapter);
-
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 //        return super.onCreateOptionsMenu(menu);   //get rid of default behavior.
@@ -84,7 +83,14 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.mnu_three) {
-            //Toast.makeText(getBaseContext(), "Hangup it's a telemarketer.", Toast.LENGTH_LONG).show();
+
+            MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.livelong);
+            mediaPlayer.start(); // no need to call prepare(); create() does that for you
+//            String newAudioPath = "android.resource://" + getPackageName() + "/" + R.raw.livelong;
+//            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(newAudioPath));
+//            intent.setDataAndType(Uri.parse(newAudioPath), "audio/*");
+//            startActivity(intent);
+
             return true;
         }
 
