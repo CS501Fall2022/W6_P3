@@ -104,6 +104,24 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);  //if none of the above are true, do the default and return a boolean.
     }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        for (int i = 0; i<MyCustomAdapter.episodeRatings.length; i++){
+            editor.putFloat(MyCustomAdapter.ratings + i, MyCustomAdapter.episodeRatings[i]);
+        }
+        editor.commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        for (int i = 0; i<MyCustomAdapter.episodeRatings.length; i++){
+            MyCustomAdapter.episodeRatings[i] = sharedPrefs.getFloat(MyCustomAdapter.ratings + i,0);
+        }
+    }
 }
 
 
@@ -137,14 +155,14 @@ public class MainActivity extends AppCompatActivity {
 //STEP 1: Create references to needed resources for the ListView Object.  String Arrays, Images, etc.
 
 class MyCustomAdapter extends BaseAdapter {
-    private final String ratings = "RATINGS";
+    public static final String ratings = "RATINGS";
+    public static float episodeRatings[];
 
     private String episodes[];             //Keeping it simple.  Using Parallel arrays is the introductory way to store the List data.
     String episodeDescriptions[];  //the "better" way is to encapsulate the list items into an object, then create an arraylist of objects.
     String episodelinks[];
 //     int episodeImages[];         //this approach is fine for now.
     ArrayList<Integer> episodeImages;  //Well, we can use one arrayList too...  Just mixing it up here, Arrays or Templated ArrayLists, you choose.
-    float episodeRatings[];
 //    ArrayList<String> episodes;
 //    ArrayList<String> episodeDescriptions;
 
@@ -259,10 +277,7 @@ class MyCustomAdapter extends BaseAdapter {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
                 if (b) {
-                    SharedPreferences.Editor editor = MainActivity.sharedPrefs.edit();
                     episodeRatings[position] = v;
-                    editor.putFloat(ratings + (position), v);
-                    editor.commit();
                 }
             }
         });
